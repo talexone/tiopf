@@ -57,7 +57,7 @@
                             {$UNDEF DELPHIXE101}
                             {$DEFINE DELPHIXE102}
                             {$IF CompilerVersion >= 33}
-                              {$DEFINE DELPHIXE103ORABOVE}
+                              {$DEFINE DELPHIXE103ORABOVE}  // RAD Studio 10.3 Rio (27; BDS 20)
                               {$UNDEF DELPHIXE102}
                               {$DEFINE DELPHIXE103}
                               {$IF CompilerVersion >= 34}
@@ -66,7 +66,7 @@ If you get here, you are probably trying to compile tiOPF with a new Delphi rele
 Please notify the tiOPF developers or if you can, supply a patch to support the
 new release.
                               {$IFEND}
-                            {$IFEND}
+                            {$IFEND} // XE 10.3 Rio
                           {$IFEND} // XE 10.2 Tokyo
                         {$IFEND} // XE 10.1 Berlin
                       {$IFEND} // XE10 Seattle
@@ -110,7 +110,7 @@ new release.
 
 // Turn this on if you have VirtualTrees installed and want virtual treeview support
 // in TtiVT... controls and mediators
-{.$DEFINE VIRTUAL_TREEVIEW}
+{$DEFINE VIRTUAL_TREEVIEW}
 
 // For old tiOPF applications where TOID was an Int64, not an object
 {.$DEFINE OID_AS_INT64}
