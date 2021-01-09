@@ -327,10 +327,14 @@ type
 
     procedure DoBeforeItemErase(Canvas: TCanvas; Node: PVirtualNode; ItemRect: TRect; var Color: TColor;
       var EraseAction: TItemEraseAction); override;
+    {$IFDEF VT73_UP}
+    procedure DoGetText(var pEventArgs: TVSTGetCellTextEventArgs); override;
+    {$ELSE}
     procedure DoGetText(Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var Text: UnicodeString); override;
+    {$ENDIF}
     procedure DoFocusChange(Node: PVirtualNode; Column: TColumnIndex); override;
     function DoGetImageIndex(Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
-      var Ghosted: Boolean; var Index: Integer): TCustomImageList; override;
+      var Ghosted: Boolean; var Index: {$IFDEF VT73_UP}TImageIndex{$ELSE}Integer{$ENDIF}): TCustomImageList; override;
     function DoInitChildren(Node: PVirtualNode; var ChildCount: Cardinal): Boolean; override;
     procedure DoInitNode(Parent, Node: PVirtualNode; var InitStates: TVirtualNodeInitStates); override;
 
@@ -559,7 +563,8 @@ type
     procedure VTDoBeforeItemErase(Canvas: TCanvas; Node: PVirtualNode; ItemRect: TRect; var ItemColor: TColor; var EraseAction: TItemEraseAction); virtual;
     procedure VTDoGetText(Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var Text: UnicodeString); virtual;
     procedure VTDoFocusChanged(Node: PVirtualNode; Column: TColumnIndex); virtual;
-    procedure VTGetImageIndex(Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: Integer);
+    procedure VTGetImageIndex(Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
+      var Ghosted: Boolean; var ImageIndex: {$IFDEF VT73_UP}TImageIndex{$ELSE}Integer{$ENDIF});
     procedure VTInitNode(Parent, Node: PVirtualNode; var InitStates: TVirtualNodeInitStates); virtual;
     procedure VTInitChildren(Node: PVirtualNode;  var ChildCount: Cardinal); virtual;
     procedure DoOnPaintText(pSender: TBaseVirtualTree; const pTargetCanvas: TCanvas; pNode: PVirtualNode;  pColumn: TColumnIndex; pTextType: TVSTTextType);
@@ -2554,7 +2559,7 @@ end;
 
 procedure TtiCustomVirtualTree.VTGetImageIndex(Node: PVirtualNode;
   Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean;
-  var ImageIndex: Integer);
+  var ImageIndex: {$IFDEF VT73_UP}TImageIndex{$ELSE}Integer{$ENDIF});
 begin
   if Assigned(OnGetImageIndex) then
     OnGetImageIndex(Self, Node, GetObjectFromNode(Node), Kind, Column, Ghosted, ImageIndex);
@@ -2779,8 +2784,7 @@ const
  );
 begin
   LGlyphIndex := SortGlyphs[ASortDirection, tsUseThemes in VT.Header.Treeview.TreeStates];
-  GetUtilityImages.Draw(ACanvas, APosition.X, APosition.Y, LGlyphIndex);
-
+  Header.Images.Draw(ACanvas, APosition.X, APosition.Y, LGlyphIndex);
 end;
 
 
@@ -3093,18 +3097,32 @@ begin
 end;
 
 function TtiInternalVirtualTree.DoGetImageIndex(Node: PVirtualNode;
-  Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean;
-  var Index: Integer): TCustomImageList;
+  Kind: TVTImageKind; Column: TColumnIndex;
+  var Ghosted: Boolean; var Index: {$IFDEF VT73_UP}TImageIndex{$ELSE}Integer{$ENDIF}): TCustomImageList;
+
 begin
   FtiOwner.VTGetImageIndex(Node, Kind, Column, Ghosted, Index);
   Result := nil;
 end;
 
+{$IFDEF VT73_UP}
+procedure TtiInternalVirtualTree.DoGetText(var pEventArgs: TVSTGetCellTextEventArgs);
+begin
+  if toShowStaticText in TreeOptions.StringOptions then
+    FtiOwner.VTDoGetText(pEventArgs.Node, pEventArgs.Column,
+      TVSTTextType.ttStatic, pEventArgs.StaticText)
+  else
+    FtiOwner.VTDoGetText(pEventArgs.Node, pEventArgs.Column,
+      TVSTTextType.ttNormal, pEventArgs.CellText);
+
+end;
+{$ELSE}
 procedure TtiInternalVirtualTree.DoGetText(Node: PVirtualNode;
   Column: TColumnIndex; TextType: TVSTTextType; var Text: UnicodeString);
 begin
   FtiOwner.VTDoGetText(Node, Column, TextType, Text);
 end;
+{$ENDIF}
 
 function TtiInternalVirtualTree.DoInitChildren(Node: PVirtualNode; var ChildCount: Cardinal): Boolean;
 begin

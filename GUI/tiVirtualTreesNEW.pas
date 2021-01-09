@@ -1,6 +1,9 @@
 unit tiVirtualTreesNEW;
 
 interface
+
+{$I tiDefines.inc}
+
 uses
   VirtualTrees
  ,Graphics
@@ -84,7 +87,11 @@ type
     function IsSelectedAndUnfocused(Node: PVirtualNode; Column: TColumnIndex): boolean;
   protected
     procedure PaintNormalText(var PaintInfo: TVTPaintInfo; TextOutFlags: Integer; Text: UnicodeString); override;
+    {$IFDEF VT73_UP}
+    procedure PaintStaticText(const PaintInfo: TVTPaintInfo; pStaticTextAlignment: TAlignment; const Text: string); override;
+    {$ELSE}
     procedure PaintStaticText(const PaintInfo: TVTPaintInfo; TextOutFlags: Integer; const Text: UnicodeString); override;
+    {$ENDIF}
     procedure DoAdvancedPaintText(Node: PVirtualNode; const Canvas: TCanvas; Column: TColumnIndex;
       TextType: TVSTTextType; NodeDisabled: boolean; NodeSelectedAndUnfocused: boolean); virtual;
     function GetColumnClass: TVirtualTreeColumnClass; override;
@@ -106,6 +113,16 @@ resourcestring
 
 const
   AlignmentToDrawFlag: array[TAlignment] of Cardinal = (DT_LEFT, DT_RIGHT, DT_CENTER); // FROM VirtualTrees.pas
+
+//----------------- utility functions ----------------------------------------------------------------------------------
+
+procedure ShowError(Msg: UnicodeString; HelpContext: Integer);
+
+begin
+  raise EVirtualTreeError.CreateHelp(Msg, HelpContext);
+end;
+
+//----------------------------------------------------------------------------------------------------------------------
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -460,8 +477,14 @@ end;
 
 //----------------------------------------------------------------------------------------------------------------------
 
+
+{$IFDEF VT73_UP}
+procedure TtiVirtualStringTree.PaintStaticText(const PaintInfo: TVTPaintInfo;
+  pStaticTextAlignment: TAlignment; const Text: string);
+{$ELSE}
 procedure TtiVirtualStringTree.PaintStaticText(const PaintInfo: TVTPaintInfo; TextOutFlags: Integer;
   const Text: UnicodeString);
+{$ENDIF}
 
 // This method retrives and draws the static text bound to a particular node.
 

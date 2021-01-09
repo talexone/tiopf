@@ -46,7 +46,7 @@ type
     const AKind: TVTImageKind;
     const AColumn: TColumnIndex;
     var AGhosted: Boolean;
-    var AImageIndex: Integer) of object;
+    var AImageIndex: {$IFDEF VT73_UP} TImageIndex {$ELSE} Integer {$ENDIF}) of object;
 
   // ToDo: Gradual migration of TtiVTListView and TtiVTTreeView source that's
   //       duplicated into TtiVTAbstract
