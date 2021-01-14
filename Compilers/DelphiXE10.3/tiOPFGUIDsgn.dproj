@@ -108,6 +108,7 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DllSuffix>XE103</DllSuffix>
         <DCC_Namespace>System.Win;$(DCC_Namespace)</DCC_Namespace>
+        <DCC_Define>LINK_ZEOS_FB;$(DCC_Define)</DCC_Define>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">

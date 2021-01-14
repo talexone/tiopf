@@ -126,6 +126,8 @@
         <VerInfo_Keys>CompanyName=;FileVersion=3.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=3.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DllSuffix>XE103</DllSuffix>
+        <DCC_Define>DEBUG;LINK_ZEOS_FB;$(DCC_Define)</DCC_Define>
+        <DCC_UnitSearchPath>..\..\Options\;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -133,6 +135,7 @@
         </DelphiCompile>
         <DCCReference Include="vcl.dcp"/>
         <DCCReference Include="rtl.dcp"/>
+        <DCCReference Include="dbrtl.dcp"/>
         <DCCReference Include="..\..\Core\tiBaseObject.pas"/>
         <DCCReference Include="..\..\Core\tiParams.pas"/>
         <DCCReference Include="..\..\Core\tiCommandLineParams.pas"/>
@@ -220,10 +223,6 @@
                     <VersionInfoKeys Name="Comments"/>
                 </VersionInfoKeys>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\TeeUI9260.bpl">TeeChart User Interface Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\TeeDB9260.bpl">TeeChart Database Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\Tee9260.bpl">TeeChart Components</Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\RvDesign110.bpl">Fichier C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\RvDesign110.bpl non trouvé</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k260.bpl">Composants Microsoft Office 2000 Sample Automation Server Wrapper</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Composants Microsoft Office XP Sample Automation Server Wrapper</Excluded_Packages>
                 </Excluded_Packages>
