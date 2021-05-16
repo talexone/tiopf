@@ -130,7 +130,8 @@ type
     procedure   Add(AObject: TtiDBMetaDataField); reintroduce;
     function    AddInstance(const AFieldName : string;
                              const AFieldKind : TtiQueryFieldKind;
-                             AFieldWidth : integer = 0): TtiDBMetaDataField; overload;
+                             AFieldWidth : integer = 0; AFieldNullable: boolean = false;
+                             AFieldPK: boolean = false): TtiDBMetaDataField; overload;
     function    AddInstance : TtiDBMetaDataField; overload;
     // Don't use AddField. Use AddInstance instead
     //    procedure   AddField(const AFieldName : string;
@@ -151,6 +152,8 @@ type
     FName: TFieldName;
     FWidth: integer;
     FKind: TtiQueryFieldKind;
+    FNullable: boolean;
+    FPK: boolean;
     function    GetKindAsStr: string;
     procedure   SetKindAsStr(const AValue: string);
   protected
@@ -167,6 +170,8 @@ type
     property    Kind : TtiQueryFieldKind read FKind write FKind;
     property    KindAsStr : string read GetKindAsStr write SetKindAsStr;
     property    Width : integer read FWidth write FWidth;
+    property    Nullable: boolean read FNullable write FNullable;
+    property    PK: boolean read FPK write FPK;
   end;
 
 
@@ -747,7 +752,8 @@ begin
 end;
 
 function TtiDBMetaDataTable.AddInstance(const AFieldName: string;
-  const AFieldKind: TtiQueryFieldKind; AFieldWidth: integer = 0): TtiDBMetaDataField;
+  const AFieldKind: TtiQueryFieldKind; AFieldWidth: integer = 0;
+  AFieldNullable: boolean = false; AFieldPK: boolean = false): TtiDBMetaDataField;
 begin
   { 9 Jan 2006, Graeme:  Please do not remove the 'Self.' part. Free Pascal
     needs it for some reason!!  This gave me a lot of extra grey hairs. }
@@ -768,6 +774,8 @@ begin
   end
   else
     Result.Width := AFieldWidth;
+  Result.Nullable := AFieldNullable;
+  Result.PK := AFieldPK;
   Result.ObjectState := posClean;
 end;
 
