@@ -1007,7 +1007,7 @@ procedure TtiLogToCacheAbs.Init(const ASynchronized: Boolean);
 begin
   FWorkingListCritSect := TCriticalSection.Create;
   FWorkingList := TtiLogEvents.Create;
-  FThrdLog     := TtiThrdLog.CreateExt(self); // Must call FThrdLog.Start in the descandant classes
+  FThrdLog     := TtiThrdLog.CreateExt(self); // Must call FThrdLog.Start in the descendant classes
   FSynchronized := ASynchronized;
 end;
 
@@ -1047,8 +1047,11 @@ end;
 
 procedure TtiLogToCacheAbs.Terminate;
 begin
-  FThrdLog.Terminate;
-  FThrdLog.WaitFor;
+  if Assigned(FThrdLog) then
+    FThrdLog.Terminate;
+  if Assigned(FThrdLog) then
+    FThrdLog.WaitFor;
+  inherited Terminate;
 end;
 
 

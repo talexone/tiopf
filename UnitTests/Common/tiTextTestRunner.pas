@@ -105,7 +105,7 @@ uses
   ,Classes
   ,SysUtils
   ,INIFiles
-//  ,textprogressrunner
+  ,textprogressrunner
  ;
 
 const
@@ -132,19 +132,19 @@ begin
       Suite.LoadConfiguration(ExtractFilePath(ParamStr(0)) + 'dunit.ini', False, True);
       Suite.FailsOnNoChecksExecuted:= false; // Suppress empty tests in the TextTestRunner
       i := 0;
+      { more verbose progress output }
+      if gCommandLineParams.IsParam(CCommandLineParamProgress) then
+      begin
+        inc(i);
+        SetLength(aListeners, i);
+        aListeners[i-1] := TTextProgressTestListener.Create;
+      end;
       { We have this default listener, unless told to be silent }
       if not gCommandLineParams.IsParam(CCommandLineParamSilent) then
       begin
         inc(i);
         SetLength(aListeners, i);
         aListeners[i-1] := TtiTextTestListener.Create;
-      end;
-      { more verbose progress output }
-      if gCommandLineParams.IsParam(CCommandLineParamProgress) then
-      begin
-        inc(i);
-        SetLength(aListeners, i);
-//        aListeners[i-1] := TTextProgressTestListener.Create;
       end;
       { output test report to XML }
       if gCommandLineParams.IsParam(CCommandLineParamXML) then
@@ -519,9 +519,13 @@ begin
       LIdentLong := 'report_long_d2007';
       LIdentShort := 'report_short_d2007';
     {$ENDIF}
+    {$IFDEF FPC}
+      LIdentLong := 'report_long_fpc';
+      LIdentShort := 'report_short_fpc';
+    {$ENDIF}
 
     if (LIdentLong = '') or (LIdentShort = '') then
-      EtiOPFDUnitException.Create('Unknown Delphi version');
+      EtiOPFDUnitException.Create('Unknown Delphi or FPC version');
     lINIFile.WriteString('Report_Long',  lIdentLong, LLong);
     lINIFile.WriteString('Report_Short', lIdentShort, LShort);
   finally

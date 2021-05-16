@@ -188,7 +188,10 @@ type
     FExternalOnChange: TNotifyEvent;
     function    GetDisplayFieldName: string;
     procedure   InternalListRefresh;
+    procedure   SetDisplayFieldName(AValue: string);
   protected
+    procedure   SetSelectedObject(const AValue: TtiObject); override;
+    function    GetSelectedObject: TtiObject; override;
     procedure   SetListObject(const AValue: TtiObjectList); override;
     procedure   SetOnChangeActive(AValue: Boolean); virtual;
     procedure   SetupGUIandObject; override;
@@ -197,7 +200,7 @@ type
   public
     procedure   RefreshList; virtual;
     procedure   Update(ASubject: TtiObject; AOperation: TNotifyOperation); override;
-    property    DisplayFieldName: string read GetDisplayFieldName write FDisplayFieldName;
+    property    DisplayFieldName: string read GetDisplayFieldName write SetDisplayFieldName;
   end;
   
 
@@ -709,6 +712,50 @@ begin
       RaiseMediatorError(cErrorAddingItemToCombobox,[E.message, FieldName]);
   end;
   ObjectToGui;
+end;
+
+procedure TtiDynamicComboBoxMediatorView.SetDisplayFieldName(AValue: string);
+begin
+  FDisplayFieldName := AValue;
+  InternalListRefresh;
+end;
+
+procedure TtiDynamicComboBoxMediatorView.SetSelectedObject(const AValue: TtiObject);
+var
+  i: integer;
+  o: TObject;
+begin
+  if not Assigned(AValue) then
+    View.FocusItem := -1
+  else
+  begin
+    for i := 0 to ValueList.Count - 1 do
+      if ValueList.Items[i].Equals(AValue) then
+      begin
+        View.FocusItem := i;
+        Break; //==>
+      end;
+  end;
+end;
+
+function TtiDynamicComboBoxMediatorView.GetSelectedObject: TtiObject;
+var
+  i: Integer;
+  lPropType: TTypeKind;
+begin
+  if View.FocusItem = -1 then
+    exit;
+  if Subject = nil then
+    Exit; //==>
+
+  if not Assigned(ValueList) then
+    RaiseMediatorError(cErrorListHasNotBeenAssigned);
+
+  lPropType := typinfo.PropType(Subject, FieldName);
+  if lPropType = tkClass then
+    Result := TtiObject(typinfo.GetObjectProp(Subject, FieldName))
+  else
+    Result := nil;
 end;
 
 function TtiDynamicComboBoxMediatorView.GetDisplayFieldName: string;
