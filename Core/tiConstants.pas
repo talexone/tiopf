@@ -62,6 +62,11 @@ const
   CTIProtocolSelf = 'self';
   CTIProtocolMailTo = 'mailto';
 
+{$IFDEF DELPHIXE104}
+  cPackageSuffix = '340';
+  cCompilerName = 'Delphi XE10.4 Sydney';
+{$ENDIF}
+
 {$IFDEF DELPHIXE103}
   cPackageSuffix = '330';
   cCompilerName = 'Delphi XE10.3 Rio';

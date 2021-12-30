@@ -61,11 +61,17 @@
                               {$UNDEF DELPHIXE102}
                               {$DEFINE DELPHIXE103}
                               {$IF CompilerVersion >= 34}
+                                {$DEFINE DELPHIXE104ORABOVE}  // RAD Studio 10.4 Rio (28; BDS 21)
+                                {$UNDEF DELPHIXE103}
+                                {$DEFINE DELPHIXE104}
+                                {$IF CompilerVersion >= 35}
+
 Unsupported Delphi version.
 If you get here, you are probably trying to compile tiOPF with a new Delphi release.
 Please notify the tiOPF developers or if you can, supply a patch to support the
 new release.
-                              {$IFEND}
+                                {$IFEND}
+                              {$IFEND} // XE 10.4 Sydney
                             {$IFEND} // XE 10.3 Rio
                           {$IFEND} // XE 10.2 Tokyo
                         {$IFEND} // XE 10.1 Berlin
