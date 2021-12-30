@@ -83,41 +83,6 @@ type
     procedure AssignPersistenceLayerDefaults(const APersistenceLayerDefaults: TtiPersistenceLayerDefaults); override;
   end;
 
-const
-  cErrorProtocolParameterNeeded = ' needs a ''protocol'' param';
-
-{ TtiPersistenceLayerZeosFB }
-
-function TtiPersistenceLayerZeosFB.GetPersistenceLayerName: string;
-begin
-  Result := cTIPersistZeosFB;
-end;
-
-function TtiPersistenceLayerZeosFB.GetDatabaseClass: TtiDatabaseClass;
-begin
-  Result := TtiDatabaseZeosIBFB;
-end;
-
-function TtiPersistenceLayerZeosFB.GetQueryClass: TtiQueryClass;
-begin
-  Result := TtiQueryZeos;
-end;
-
-procedure TtiPersistenceLayerZeosFB.AssignPersistenceLayerDefaults(
-  const APersistenceLayerDefaults: TtiPersistenceLayerDefaults);
-begin
-  Assert(APersistenceLayerDefaults.TestValid, CTIErrorInvalidObject);
-  APersistenceLayerDefaults.PersistenceLayerName := cTIPersistZeosFB;
-  APersistenceLayerDefaults.DatabaseName :=
-    CDefaultDatabaseDirectory + CDefaultDatabaseName + '.fdb';
-  APersistenceLayerDefaults.Username := 'SYSDBA';
-  APersistenceLayerDefaults.Password := 'masterkey';
-  APersistenceLayerDefaults.CanDropDatabase := False;
-  APersistenceLayerDefaults.CanCreateDatabase := True;
-  APersistenceLayerDefaults.CanSupportMultiUser := True;
-  APersistenceLayerDefaults.CanSupportSQL := True;
-end;
-
   TtiDatabaseZeosIBFB = class(TtiDatabaseZeosAbs)
   protected
     function FieldMetaDataToSQLCreate(const pFieldMetaData: TtiDBMetaDataField): string; override;
@@ -130,7 +95,6 @@ end;
     class procedure CreateDatabase(const ADatabaseName, AUserName, APassword: string; const AParams: string=''); override;
     class procedure DropDatabase(const ADatabaseName, AUserName, APassword: string; const AParams: string=''); override;
   end;
-
 
 implementation
 
@@ -212,14 +176,6 @@ begin
     end
     else
       raise EtiOPFProgrammerException.Create(ClassName + cErrorProtocolParameterNeeded);
-
-    if lParams.Values['PROTOCOL'] <> '' then
-    begin
-      Connection.Protocol := lParams.Values['PROTOCOL'];
-      lParams.Delete(lParams.IndexOfName('PROTOCOL'));
-    end
-    else
-      raise EtiOPFProgrammerException.Create( ClassName + cErrorProtocolParameterNeeded);
 
 //    if Params.Values['CODEPAGE'] <> '' then
 //      Connection.Properties.Add('CODEPAGE=' + Params.Values['CODEPAGE']);

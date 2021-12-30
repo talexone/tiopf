@@ -91,8 +91,8 @@ type
   TtiCustomVirtualTree = class;
   TtiVTListView = class;
 
-  TvtTypeKind = (vttkString, vttkInt, vttkFloat, vttkDate, vttkDateTime, vttkTime, vttkCurrency);
-
+  TvtTypeKind = (vttkString, vttkInt, vttkFloat, vttkDate, vttkDateTime, vttkTime, vttkCurrency, vttkBoolean, vttkBlob);
+ 
   TFilterConj = (fcNone, fcAnd, fcOr);
 
   TFilterOp = (foNone, foEqual, foNotEqual,

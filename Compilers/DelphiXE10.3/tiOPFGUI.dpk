@@ -23,6 +23,7 @@ package tiOPFGUI;
 {$WRITEABLECONST ON}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
+{$DEFINE LINK_ZEOS_FB}
 {$DEFINE PACKAGE}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
@@ -39,7 +40,9 @@ requires
   vclx,
   dbrtl,
   xmlrtl,
-  vclimg;
+  vclimg,
+  tiOPFOptions,
+  VirtualTreesR;
 
 contains
   tiDialogs in '..\..\GUI\tiDialogs.pas',

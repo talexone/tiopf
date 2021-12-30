@@ -19,3 +19,4 @@ _bin/*
 lib/
 *.res
 *.rsj
+_Dcu/

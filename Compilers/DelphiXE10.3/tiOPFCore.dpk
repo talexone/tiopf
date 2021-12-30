@@ -23,6 +23,8 @@ package tiOPFCore;
 {$WRITEABLECONST ON}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$DEFINE LINK_ZEOS_FB}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'tiOPF Core package'}
 {$LIBSUFFIX 'XE103'}
@@ -31,7 +33,8 @@ package tiOPFCore;
 
 requires
   vcl,
-  rtl;
+  rtl,
+  dbrtl;
 
 contains
   tiBaseObject in '..\..\Core\tiBaseObject.pas',
