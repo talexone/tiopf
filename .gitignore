@@ -26,3 +26,4 @@ __history
 bin/*
 _bin/*
 _dcu
+*.cfg
