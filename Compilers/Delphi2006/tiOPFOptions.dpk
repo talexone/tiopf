@@ -32,7 +32,8 @@ requires
   vcl,
   bdertl,
   vclx,
-  msxml;
+  msxml,
+  vcljpg;
 
 contains
   tiXMLToTIDataset in '..\..\Options\tiXMLToTIDataset.pas',

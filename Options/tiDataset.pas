@@ -56,7 +56,8 @@ interface
 uses
   Classes, SysUtils, Forms, Db, TypInfo, Graphics, Controls,
   {$IFDEF DELPHI6ORABOVE} Variants, {$ENDIF} {$ifndef fpc}SqlTimSt,{$endif} 
-  tiObject {$ifdef UNICODE}, WideStrUtils {$endif}, tiUtils;
+  tiObject {$ifdef UNICODE}, WideStrUtils {$endif}, tiUtils
+  {$IFNDEF FPC}, jpeg{$ENDIF FPC};
 
 type
 {$IFDEF UNICODE}
@@ -388,9 +389,17 @@ begin
       if Obj is TPicture then begin
         if(Obj as TPicture).Graphic <> nil
         then(Obj as TPicture).Graphic.SaveToStream(Self);
+        FModified := false;
       end
-      else if Obj is TStrings
-      then(Obj as TStrings).SaveToStream(Self)
+      else
+       if Obj is TJpegImage then
+       begin
+        if not (Obj as TJpegImage).Empty then
+          (Obj as TJpegImage).SaveToStream(Self);
+        FModified := false;
+       end
+       else if Obj is TStrings
+         then(Obj as TStrings).SaveToStream(Self)
     end;
   end;
   Position := 0;
@@ -429,6 +438,12 @@ begin
         if(Obj as TPicture).Graphic <> nil
         then(Obj as TPicture).Graphic.LoadFromStream(Self);
       end
+      else
+       if Obj is TJpegImage then
+       begin
+        if not (Obj as TJpegImage).Empty then
+          (Obj as TJpegImage).LoadFromStream(Self);
+       end
       else if Obj is TStrings
       then(Obj as TStrings).LoadFromStream(Self)
     end;
@@ -835,6 +850,10 @@ procedure TTiCustomDataset.InternalInitFieldDefs;
               then AddFieldDef(PropInfo, ftMemo)
               else if oClass.InheritsFrom(TPicture)
               then AddFieldDef(PropInfo, ftGraphic)
+              else if  oClass.InheritsFrom(Graphics.TBitmap)
+              then AddFieldDef(PropInfo, ftBlob)
+              else if oClass.InheritsFrom(TJpegImage)
+              then AddFieldDef(PropInfo, ftBlob)
               else if oClass.InheritsFrom(TtiObject) then begin
                 if oClass.InheritsFrom(TtiObjectList)
                 then AddFieldDef(PropInfo, ftDataSet);
@@ -1009,6 +1028,14 @@ begin
         if(Obj as TPicture).Graphic <> nil
         then(Obj as TPicture).Graphic.SaveToStream(Stream);
       end;
+      ftBlob: begin
+        Move(pDst^, pointer(Stream), SizeOf(pointer));
+        Stream.Size := 0;
+        Stream.Position := 0;
+        Obj := TObject(GetOrdProp(oObject, PropInfo));
+        if not (Obj as TJpegImage).Empty
+        then(Obj as TJpegImage).SaveToStream(Stream);
+      end;
       ftDataSet: begin
         Obj := GetObjectProp(oObject, PropInfo);
         Move(Obj, pDst^, SizeOf(TObject));
@@ -1160,7 +1187,15 @@ begin
         Stream.Position := 0;
         Obj := GetObjectProp(oObject, PropInfo);
         if(Obj as TPicture).Graphic <> nil
-        then(Obj as TPicture).Graphic.LoadFromStream(Stream);
+          then(Obj as TPicture).Graphic.LoadFromStream(Stream);
+      end;
+      ftBlob:
+      begin
+        Move(pSrc^, pointer(Stream), SizeOf(pointer));
+        Stream.Position := 0;
+        Obj := GetObjectProp(oObject, PropInfo);
+        if Obj is TJpegImage then
+          (Obj as TJpegImage).LoadFromStream(Stream);
       end;
       ftMemo: begin //Buffer can't be nil (?)
         Move(pSrc^, pointer(Stream), SizeOf(pointer));
