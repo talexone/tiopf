@@ -30,7 +30,8 @@ package tiOPFCore;
 requires
   vcl,
   rtl,
-  vclx;
+  vclx,
+  dbrtl;
 
 contains
   tiWin32 in '..\..\Core\tiWin32.pas',
