@@ -12,8 +12,10 @@ uses
   Windows
   ,OleCtnrs
   ,Messages
+  ,jpeg
   {$ELSE}
-   LCLType
+  LMessages
+  ,LCLType
   ,LCLIntf
   ,InterfaceBase
   ,EditBtn
@@ -230,6 +232,7 @@ type
     property PasswordChar : Char read GetPasswordChar write SetPasswordChar;
     property OnKeyPress;
     property OnKeyDown;
+    property OnKeyUp;
   public
     constructor Create(AOwner : TComponent); override;
   end;
@@ -2465,12 +2468,17 @@ begin
     Exit; //==>
   end;
   lData := GetObjectProp(FData, FsFieldName);
-  if not (lData is TGraphic) then
+  if not (lData is TPicture) and not(lData is TJpegImage) then
     raise exception.CreateFmt(
-      'Property %s.%s is not of type TGraphic',
+      'Property %s.%s is not of type TPicture or TJpegImage',
       [FData.ClassName, FsFieldName]);
 
-  FImage.Picture.Assign(TGraphic(lData));
+  if lData is TPicture then
+    FImage.Picture.Assign(TPicture(lData))
+  else
+  begin
+    FImage.Picture.Assign(TJpegImage(lData));
+  end;
 
 end;
 
@@ -2654,11 +2662,14 @@ begin
     Exit; //==>
 
   lData := GetObjectProp(FData, FsFieldName);
-  if not (lData is TGraphic) then
+  if not (lData is TGraphic) or not(lData is TJpegImage) then
     raise exception.CreateFmt(
-      'Property %s.%s is not of type TGraphic',
+      'Property %s.%s is not of type TGraphic or TJpegImage',
       [FData.ClassName, FsFieldName]);
-  TGraphic(lData).Assign(FImage.Picture.Graphic);
+  if lData is TGraphic then
+    TGraphic(lData).Assign(FImage.Picture.Graphic)
+  else
+    TJpegImage(lData).Assign(FImage.Picture.Graphic);
 
 end;
 
