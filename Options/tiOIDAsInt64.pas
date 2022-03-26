@@ -16,7 +16,7 @@ const
 
 type
 
-  TtiOID = Int64;
+  TtiOID = UInt64;
   TtiOIDGenerator = class(TtiBaseObject)
   public
     function NextOID: TtiOID; virtual; abstract;
@@ -67,7 +67,7 @@ uses
   ,SysUtils
   ,tiUtils
   ,tiOPFManager
-  ,tiDialogs
+//  ,tiDialogs
   ,tiObject
   ,tiVisitorDB
   ,tiConstants

@@ -27,7 +27,6 @@ package tiOPFOptions;
 {$IMPLICITBUILD OFF}
 
 requires
-  tiOPFCore,
   rtl,
   vcl,
   bdertl,

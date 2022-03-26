@@ -175,7 +175,7 @@
 {.$DEFINE SYNEDIT}
 
 // For old tiOPF applications where TOID was an Int64, not an object
-{.$DEFINE OID_AS_INT64}
+{$DEFINE OID_AS_INT64}
 
 // Determine format for date/time to string conversion
 // This is currently only referenced in tiDateTimeAsXMLString

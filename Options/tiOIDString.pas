@@ -22,6 +22,8 @@ uses
 const
   cErrorInvalidStartID = 'Invalid start ID <%s>';
 
+{$IFNDEF OID_AS_INT64}
+
 type
 
   TtiOIDGeneratorString = class;
@@ -82,6 +84,8 @@ type
     procedure Execute(const AData: TtiVisited); override;
   end;
 
+{$ENDIF}
+
 const
   CNextOIDTableName = 'Next_OID';
   CNextOIDFieldName = 'OID';
@@ -109,6 +113,8 @@ uses
 
 const
   cuLowRange = 100;
+
+{$IFNDEF OID_AS_INT64}
 
  // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  // *
@@ -319,5 +325,7 @@ end;
 initialization
   GTIOPFManager.VisitorManager.RegisterVisitor(cNextOIDReadHigh, TVisDBNextOIDAmblerRead);
   GTIOPFManager.VisitorManager.RegisterVisitor(cNextOIDReadHigh, TVisDBNextOIDAmblerUpdate);
+
+{$ENDIF}
 
 end.

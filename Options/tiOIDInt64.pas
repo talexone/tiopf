@@ -29,6 +29,8 @@ uses
   tiVisitor,
   SyncObjs;
 
+{$IFNDEF OID_AS_INT64}
+
 type
 
   TOIDInt64 = class(TtiOID)
@@ -89,6 +91,8 @@ type
     procedure Execute(const AData: TtiVisited); override;
   end;
 
+{$ENDIF}
+
 implementation
 
 uses
@@ -97,6 +101,8 @@ uses
   tiConstants,
   tiLog,
   SysUtils;
+
+{$IFNDEF OID_AS_INT64}
 
 { TOIDInt64 }
 
@@ -310,5 +316,7 @@ end;
 initialization
   GTIOPFManager.VisitorManager.RegisterVisitor(cNextOIDReadHigh, TVisDBNextOIDAmblerRead);
   GTIOPFManager.VisitorManager.RegisterVisitor(cNextOIDReadHigh, TVisDBNextOIDAmblerUpdate);
+
+{$ENDIF}
 
 end.

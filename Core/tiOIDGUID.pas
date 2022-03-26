@@ -14,6 +14,7 @@ interface
 uses
   tiOID;
 
+{$IFNDEF OID_AS_INT64}
 type
 
   TOIDGUID = class(TOIDStringAbs)
@@ -26,6 +27,8 @@ type
       const APersistenceLayerName: string = ''); override;
   end;
 
+{$ENDIF}
+
 implementation
 
 uses
@@ -34,6 +37,7 @@ uses
   ,SysUtils
  ;
 
+{$IFNDEF OID_AS_INT64}
 
 { TtiOIDGeneratorGUID }
 
@@ -61,5 +65,7 @@ class function TtiOIDGeneratorGUID.OIDClass: TtiOIDClass;
 begin
   Result := TOIDGUID;
 end;
+
+{$ENDIF}
 
 end.

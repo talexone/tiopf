@@ -418,7 +418,7 @@ type
    {$IFDEF OID_AS_INT64}
       property    OID        : TtiOID                   read GetOID write SetOID;
    {$ELSE}
-      property    OID        : TtiOID                   read GetOID       ;
+      property    OID        : TtiOID                   read GetOID write SetOID;      ;
    {$ENDIF}
     {: The current state of this object}
     property    ObjectState: TPerObjectState read GetObjectState write SetObjectState;

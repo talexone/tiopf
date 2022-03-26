@@ -34,8 +34,6 @@ requires
   vclactnband,
   vclx,
   vcljpg,
-  tiOPFCore,
-  tiOPFOptions,
   bdertl,
   dbrtl,
   xmlrtl;

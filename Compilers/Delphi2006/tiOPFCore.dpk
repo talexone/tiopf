@@ -31,7 +31,11 @@ requires
   vcl,
   rtl,
   vclx,
-  dbrtl;
+  dbrtl,
+  ZPlain,
+  ZParseSql,
+  ZDbc,
+  ZComponent;
 
 contains
   tiWin32 in '..\..\Core\tiWin32.pas',

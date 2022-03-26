@@ -33,6 +33,9 @@ uses
   tiVisitor,
   SyncObjs;
 
+{$IFNDEF OID_AS_INT64}
+
+
 type
   TOIDHex = class(TtiOID)
   private
@@ -95,6 +98,7 @@ type
     procedure Execute(const AData: TtiVisited); override;
   end;
 
+{$ENDIF}
 
 const
   CNextOIDHexReadHigh = 'NextOIDHexReadHigh';
@@ -113,6 +117,8 @@ uses
 const
   cOIDHexNumber: array [0..15] of char =
     ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F');
+
+{$IFNDEF OID_AS_INT64}
 
 { TOIDHex }
 
@@ -383,5 +389,7 @@ initialization
 
   GTIOPFManager.VisitorManager.RegisterVisitor(CNextOIDHexReadHigh, TVisDBNextOIDHexAmblerRead);
   GTIOPFManager.VisitorManager.RegisterVisitor(CNextOIDHexReadHigh, TVisDBNextOIDHexAmblerUpdate);
+
+{$ENDIF}
 
 end.
