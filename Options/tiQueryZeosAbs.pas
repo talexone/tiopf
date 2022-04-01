@@ -93,7 +93,10 @@ function TtiQueryZeos.ExecSQL: integer;
 begin
   Prepare;
   LogParams;
-  FQuery.ExecSQL;
+  if Pos('RETURNING', UpperCase(FQuery.SQL.Text)) <> 0 then
+    FQuery.Open
+  else
+    FQuery.ExecSQL;
   Result := FQuery.RowsAffected;
 end;
 
