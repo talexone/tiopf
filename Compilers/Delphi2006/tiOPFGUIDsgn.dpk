@@ -35,7 +35,8 @@ requires
   vcljpg,
   designide,
   vclactnband,
-  dbrtl;
+  dbrtl,
+  zComponent;
 
 contains
   tiSplitterEditor in '..\..\GUI\tiSplitterEditor.pas',
