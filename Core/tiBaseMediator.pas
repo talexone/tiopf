@@ -1087,8 +1087,8 @@ end;
   --------------------------------------------------------------------- }
 
 const
-  AlignChars: array[TAlignMent] of char     = ('l', 'r', 'c');
-  OrigAlignChars: array[TAlignMent] of char = ('<', '>', '|');
+  AlignChars: array[TAlignment] of char     = ('l', 'r', 'c');
+  OrigAlignChars: array[TAlignment] of char = ('<', '>', '|');
   CMediatorFieldSeparator = '|';
 
 { TtiMediatorFieldInfo }
@@ -1473,6 +1473,7 @@ begin
   // Free MediatorList Items we don't need any more
   for i := MediatorList.Count-1 downto idx+1 do
     DoDeleteItemMediator(i, TtiListItemMediator(MediatorList[i]));
+  View.FixedRows := 1;
 end;
 
 function TtiCustomListMediatorView.DataAndPropertyValid(const AData: TtiObject): Boolean;

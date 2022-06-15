@@ -400,7 +400,7 @@ begin
     else
       raise EtiOPFInternalException.Create('Invalid FieldKind');
   end;
-  if pFieldMetaData.Null then
+  if pFieldMetaData.Nullable then
     result := result + ' NOT NULL';
 end;
 
