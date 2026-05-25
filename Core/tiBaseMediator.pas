@@ -1473,7 +1473,8 @@ begin
   // Free MediatorList Items we don't need any more
   for i := MediatorList.Count-1 downto idx+1 do
     DoDeleteItemMediator(i, TtiListItemMediator(MediatorList[i]));
-  View.FixedRows := 1;
+  if TypInfo.GetPropInfo(View, 'FixedRows') <> nil then
+    TypInfo.SetPropValue(View, 'FixedRows', 1);
 end;
 
 function TtiCustomListMediatorView.DataAndPropertyValid(const AData: TtiObject): Boolean;

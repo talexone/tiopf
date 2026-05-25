@@ -8,6 +8,7 @@ uses
    tiQuery
   ,tiQueryDataset
   ,Classes
+  ,DB
   ,ZConnection
   ,ZDataset
   ;
@@ -37,6 +38,9 @@ type
   TtiQueryZeos = class( TtiQueryDataset )
   private
     FQuery : TZQuery ;
+    FCompatParams: TParams;
+    procedure SyncZeosParamsToCompat;
+    procedure SyncCompatToZeosParams;
     procedure Prepare;
   protected
     procedure   CheckPrepared; override;
@@ -62,7 +66,6 @@ uses
   ,tiUtils
   ,tiExcept
   ,SysUtils
-  ,DB
   ,TypInfo
   ;
 
@@ -76,8 +79,10 @@ constructor TtiQueryZeos.Create;
 begin
   inherited Create;
   FQuery := TZQuery.Create( nil ) ;
+  FCompatParams := TParams.Create;
   Dataset := FQuery;
-  Params  := FQuery.Params;
+  Params := FCompatParams;
+  SyncZeosParamsToCompat;
   FSupportsRowsAffected := True;
 end;
 
@@ -85,8 +90,28 @@ destructor TtiQueryZeos.Destroy;
 begin
   Params := nil;
   Dataset := nil;
+  FCompatParams.Free;
   FQuery.Free ;
   inherited Destroy;
+end;
+
+procedure TtiQueryZeos.SyncZeosParamsToCompat;
+begin
+  FCompatParams.Clear;
+  FQuery.Params.AssignTo(FCompatParams);
+end;
+
+procedure TtiQueryZeos.SyncCompatToZeosParams;
+var
+  I: Integer;
+  LParam: TParam;
+begin
+  for I := 0 to FCompatParams.Count - 1 do
+  begin
+    LParam := FCompatParams[I];
+    if FQuery.Params.FindParam(LParam.Name) <> nil then
+      FQuery.Params.ParamByName(LParam.Name).Assign(LParam);
+  end;
 end;
 
 function TtiQueryZeos.ExecSQL: integer;
@@ -97,11 +122,13 @@ begin
     FQuery.Open
   else
     FQuery.ExecSQL;
+  SyncZeosParamsToCompat;
   Result := FQuery.RowsAffected;
 end;
 
 procedure TtiQueryZeos.Prepare;
 begin
+  SyncCompatToZeosParams;
   if FQuery.Prepared then
     Exit; // ==>
   FQuery.Prepare;
@@ -123,7 +150,9 @@ begin
   Assert(Database.TestValid(TtiDatabase), 'Database is not valid');
   if Value then
   begin
+    SyncCompatToZeosParams;
     FQuery.Open;
+    SyncZeosParamsToCompat;
   end
   else
   begin
@@ -134,6 +163,7 @@ end;
 procedure TtiQueryZeos.SetSQL(const Value: TStrings);
 begin
   FQuery.SQL.Assign( Value ) ;
+  SyncZeosParamsToCompat;
 end;
 
 procedure TtiQueryZeos.AttachDatabase(pDatabase: TtiDatabase);
@@ -157,6 +187,7 @@ procedure TtiQueryZeos.Reset;
 begin
   Active := False;
   FQuery.SQL.Clear;
+  FCompatParams.Clear;
   //FQuery.Params.Clear;
 end;
 

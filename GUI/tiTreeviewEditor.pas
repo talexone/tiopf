@@ -35,7 +35,7 @@ type
     {$IFNDEF FPC}
     function GetFormMethodName: string; override;
     {$ELSE}
-    function GetFormMethodName: shortstring; override;
+    function GetFormMethodName: shortstring;
     {$ENDIF}
     
     //function GetTrimmedEventName: string;
